@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
         $middleware->redirectUsersTo('/api/home');
+        $middleware->trustHosts(at: function() {
+            return explode(',', env('SANCTUM_STATEFUL_DOMAINS'));
+        });
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
