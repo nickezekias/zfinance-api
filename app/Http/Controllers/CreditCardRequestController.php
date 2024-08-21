@@ -15,7 +15,7 @@ class CreditCardRequestController extends Controller
      */
     public function index()
     {
-        $all = DB::table('credit_card_request')->where('user_id', Auth::user()->id)->get();
+        $all = DB::table('credit_card_requests')->where('user_id', Auth::user()->id)->get();
         return ObjResource::collection($all);
     }
 

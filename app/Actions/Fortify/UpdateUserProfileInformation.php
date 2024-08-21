@@ -19,6 +19,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
+        // return response()->json($input);
+        $this->showInput($input);
         Validator::make($input, [
             'avatar' => ['bail', 'string'],
             'birthDate' => ['required', 'string'],
@@ -89,5 +91,9 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         } else {
             return $input['IDDocument'];
         }
+    }
+
+    private function showInput(array $input) {
+        return response()->json($input);
     }
 }
