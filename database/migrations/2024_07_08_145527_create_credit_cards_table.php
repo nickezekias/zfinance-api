@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('credit_cards', function (Blueprint $table) {
             $table->id();
+            $table->decimal('amount', 12, 3);
             $table->string('account_number');
             $table->string('cvc');
-            $table->timestamp('expiry_date');
+            $table->date('expiry_date');
             $table->string('holder');
             $table->boolean('is_active')->default(true);
             $table->string('issuer'); // uba | orabank | BGFI
