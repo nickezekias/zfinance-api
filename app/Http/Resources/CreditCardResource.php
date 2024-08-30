@@ -16,6 +16,7 @@ class CreditCardResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'amount' => $this->amount,
             'accountNumber' => $this->account_number,
             'cvc' => $this->cvc,
             'expiryDate' => $this->expiry_date,

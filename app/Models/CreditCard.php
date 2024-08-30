@@ -37,4 +37,23 @@ class CreditCard extends Model
             'is_active' => 'boolean'
         ];
     }
+
+    /**
+     * Check credit card is still valid by checking it's active and not over exp date
+     * @return bool
+     */
+    public function is_valid(): bool
+    {
+        return $this->is_active == 1 && $this->expiry_date > now();
+    }
+
+    /**
+     * Check credit card has sufficient funds for given amount
+     * @param float amount
+     * @return bool
+     */
+    public function has_sufficient_funds(float $amount)
+    {
+        return $this->amount >= $amount;
+    }
 }

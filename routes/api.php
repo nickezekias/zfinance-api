@@ -20,6 +20,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('credit-cards/requests', CreditCardRequestController::class);
 
         Route::apiResource('credit-cards', CreditCardController::class);
+        Route::post('credit-cards/transfer-money', 'App\Http\Controllers\CreditCardController@transferMoney');
+        Route::post('credit-cards/recharge', 'App\Http\Controllers\CreditCardController@rechargeCard');
 
     });
 });

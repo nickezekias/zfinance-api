@@ -26,18 +26,18 @@ class CreditCardController extends Controller
     {
         // return response()->json(Auth::user()->id);
         $obj = Obj::firstOrCreate([
-           'account_number' => $request->input('accountNumber'),
-           'cvc' => $request->input('cvc'),
-           'expiry_date' => $request->input('expiryDate'),
-           'holder' => $request->input('holder'),
-           'is_active' => true,
-           'issuer' => $request->input('issuer'),
-           'network' => $request->input('network'),
-           'number' => $request->input('number'),
-           'type' => $request->input('type'),
-           'user_id' => Auth::user()->id,
-           'created_at' => now(),
-           'updated_at' => now()
+            'account_number' => $request->input('accountNumber'),
+            'cvc' => $request->input('cvc'),
+            'expiry_date' => $request->input('expiryDate'),
+            'holder' => $request->input('holder'),
+            'is_active' => true,
+            'issuer' => $request->input('issuer'),
+            'network' => $request->input('network'),
+            'number' => $request->input('number'),
+            'type' => $request->input('type'),
+            'user_id' => Auth::user()->id,
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
 
         return new ObjResource($obj);
@@ -76,5 +76,63 @@ class CreditCardController extends Controller
     public function destroy(string $id)
     {
         Obj::findOrFail($id)->delete();
+    }
+
+    /**
+     * Transfer money to another credit card
+     */
+    public function transferMoney(Request $request)
+    {
+        //TODO: check pass code
+
+        $recipient_cc_number = $request->input('recipientCardNumber');
+        $amount = $request->input('amount');
+
+        // $recipient_cc = DB::table('credit_cards')->where('number', '=', $recipient_cc_number)->first();
+        $recipient_cc = Obj::where('number', '=', $recipient_cc_number)->first();
+        $sender_cc = Obj::where('user_id', '=', Auth::user()->id)->first();
+        if ($recipient_cc && $sender_cc) {
+            if (!$sender_cc->is_valid()) {
+                return response()->json(['features.cc.yourCCIsExpiredOrDeactivated'], 401);
+            }
+            if (!$recipient_cc->is_valid()) {
+                return response()->json(['features.cc.recipientCCIsExpiredOrDeactivated'], 401);
+            }
+            // check sender has sufficient funds
+            if ($sender_cc->has_sufficient_funds($amount)) {
+                //increase recipient cc amount
+                $recipient_cc->amount += $amount;
+                $recipient_cc->updated_at = now();
+                $recipient_cc->save();
+
+                // decrease sender cc amount
+                $sender_cc->amount -= $amount;
+                $sender_cc->updated_at = now();
+                $sender_cc->save();
+
+                return response()->json([], 200);
+            } else {
+                return response()->json(['features.cc.insufficientFunds'], 401);
+            }
+        } else {
+            return response()->json(['features.cc.invalidData'], 404);
+        }
+    }
+
+    /**
+     * Recharge credit card
+     */
+    public function rechargeCard(Request $request)
+    {
+        //TODO: check pass code
+
+        $cc = Obj::where('user_id', '=', Auth::user()->id)->first();
+        if ($cc) {
+            $cc->amount += $request->input('amount');
+            $cc->save();
+            return response()->json([], 200);
+        } else {
+            return response()->json(['features.cc.invalidData'], 404);
+        }
     }
 }
