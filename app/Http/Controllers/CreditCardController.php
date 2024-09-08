@@ -7,9 +7,12 @@ use App\Models\CreditCard as Obj;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\TransactionController;
+use App\Models\Transaction;
 
 class CreditCardController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -24,7 +27,6 @@ class CreditCardController extends Controller
      */
     public function store(Request $request)
     {
-        // return response()->json(Auth::user()->id);
         $obj = Obj::firstOrCreate([
             'account_number' => $request->input('accountNumber'),
             'cvc' => $request->input('cvc'),
@@ -81,7 +83,7 @@ class CreditCardController extends Controller
     /**
      * Transfer money to another credit card
      */
-    public function transferMoney(Request $request)
+    public function transferMoney(Request $request, TransactionController $tc)
     {
         //TODO: check pass code
 
@@ -98,7 +100,9 @@ class CreditCardController extends Controller
             if (!$recipient_cc->is_valid()) {
                 return response()->json(['features.cc.recipientCCIsExpiredOrDeactivated'], 401);
             }
-            // check sender has sufficient funds
+
+            //TODO: Use DB transaction for these operations
+            //TODO: check sender has sufficient funds
             if ($sender_cc->has_sufficient_funds($amount)) {
                 //increase recipient cc amount
                 $recipient_cc->amount += $amount;
@@ -109,6 +113,14 @@ class CreditCardController extends Controller
                 $sender_cc->amount -= $amount;
                 $sender_cc->updated_at = now();
                 $sender_cc->save();
+
+                $trans_input = [
+                    'amount' => $amount,
+                    'beneficiary' => $recipient_cc->holder,
+                    'description' =>  'labels.moneyTransfer',
+                    'type' => Transaction::TRANS_TYPE_EXPENSE
+                ];
+                $tc->store($trans_input);
 
                 return response()->json([], 200);
             } else {
@@ -122,14 +134,22 @@ class CreditCardController extends Controller
     /**
      * Recharge credit card
      */
-    public function rechargeCard(Request $request)
+    public function rechargeCard(Request $request, TransactionController $tc)
     {
         //TODO: check pass code
 
+        //TODO: Use DB transaction for these operations
         $cc = Obj::where('user_id', '=', Auth::user()->id)->first();
         if ($cc) {
             $cc->amount += $request->input('amount');
             $cc->save();
+            $trans_input = [
+                'amount' => $request->input('amount'),
+                'beneficiary' => Auth::user()->last_name . ' ' . Auth::user()->first_name,
+                'description' =>  'labels.cardRecharge',
+                'type' => Transaction::TRANS_TYPE_ENTRY
+            ];
+            $tc->store($trans_input);
             return response()->json([], 200);
         } else {
             return response()->json(['features.cc.invalidData'], 404);
