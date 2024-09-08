@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CreditCardController;
 use App\Http\Controllers\CreditCardRequestController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,6 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('credit-cards', CreditCardController::class);
         Route::post('credit-cards/transfer-money', 'App\Http\Controllers\CreditCardController@transferMoney');
         Route::post('credit-cards/recharge', 'App\Http\Controllers\CreditCardController@rechargeCard');
-
     });
 });
 
