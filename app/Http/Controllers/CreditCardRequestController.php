@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CreditCardRequestResource as ObjResource;
 use App\Models\CreditCardRequest as Obj;
+use App\Notifications\CreditCardPurchaseRequestedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class CreditCardRequestController extends Controller
 {
@@ -30,6 +32,8 @@ class CreditCardRequestController extends Controller
         $obj->card_network = $request->input('cardNetwork');
         $obj->card_issuer = $request->input('cardIssuer');
         $obj->save();
+
+        Notification::send([Auth::user()], new CreditCardPurchaseRequestedNotification($obj));
 
         return new ObjResource($obj);
     }
