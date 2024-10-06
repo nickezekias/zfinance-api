@@ -17,15 +17,19 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'avatar' => $this->avatar,
+            'birthDate' => $this->birth_date,
             'createdAt' => $this->created_at,
             'firstName' => $this->first_name,
+            'fullName' => $this->full_name,
             'lastName' => $this->last_name,
             'email' => $this->email,
             'emailVerifiedAt' => $this->email_verified_at,
             'IDDocument' => $this->ID_document,
             'IDDocumentVerifiedAt' => $this->ID_document_verified_at,
             'isActive' => $this->is_active,
+            'gender' => $this->gender,
             'phone' => $this->phone,
+            'occupation' => $this->occupation,
             'phoneVerifiedAt' => $this->phone_verified_at,
             'updateAt' => $this->updated_at
         ];

@@ -25,6 +25,8 @@ Route::prefix('v1')->group(function () {
         Route::post('credit-cards/recharge', 'App\Http\Controllers\CreditCardController@rechargeCard');
 
         Route::apiResource('transactions', TransactionController::class);
+
+        Route::put('users/auth', 'App\Http\Controllers\ProfileController@update');
     });
 });
 

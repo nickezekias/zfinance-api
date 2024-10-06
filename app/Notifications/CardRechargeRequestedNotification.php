@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Admin;
 use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -39,11 +40,22 @@ class CardRechargeRequestedNotification extends Notification
     {
         $url = env('APP_URL') . '/#recharge-card';
 
+        if ($notifiable instanceof Admin) {
+            return (new MailMessage)
+                ->greeting('Hello!')
+                ->line('A user has requested a credit card recharge!')
+                ->action('View Recharge', $url)
+                ->line('Thank you for using our application!');
+        }
+
         return (new MailMessage)
-            ->greeting('Hello!')
-            ->line('A user has requested a credit card recharge!')
-            ->action('View Recharge', $url)
-            ->line('Thank you for using our application!');
+                ->greeting("Hey $notifiable->first_name!")
+                ->line('Your card recharge operation is been treated.')
+                ->line('You will receive a confirmation email once we\'re done.')
+                ->line('Meanwhile you can stay posted on your request status with the button below.')
+                ->action('View Recharge Request', $url)
+                ->line('Thank you for using our application!');
+
     }
 
     /**

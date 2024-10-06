@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Admin;
 use App\Models\CreditCardRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -39,9 +40,19 @@ class CreditCardPurchaseRequestedNotification extends Notification
     {
         $url = env('APP_URL') . '/#credit-card-request';
 
+        if ($notifiable instanceof Admin) {
+            return (new MailMessage)
+                ->greeting('Hello!')
+                ->line('A user has requested a new credit card purchase!')
+                ->action('View Card Purchase Request', $url)
+                ->line('Thank you for using our application!');
+        }
+
         return (new MailMessage)
-            ->greeting('Hello!')
-            ->line('A user has requested a new credit card purchase!')
+            ->greeting("Hey $notifiable->first_name!")
+            ->line('Your credit card purchase request is under review!')
+            ->line('You will receive a confirmation email once we\'re done.')
+            ->line('Meanwhile you can stay posted on your info validation status with the button below.')
             ->action('View Card Purchase Request', $url)
             ->line('Thank you for using our application!');
     }

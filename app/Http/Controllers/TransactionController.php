@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Transaction as Obj;
 use App\Http\Resources\TransactionResource as ObjResource;
+use App\Models\Admin;
 use App\Models\Transaction;
 use App\Notifications\CardRechargeRequestedNotification;
 use App\Notifications\MoneyTransferRequestedNotification;
@@ -40,9 +41,9 @@ class TransactionController extends Controller
         /* Notification::route('mail', 'admin@fin.zvany.com')
             ->notify(new CardRechargeRequestedNotification($obj)); */
         if ($obj->type == Transaction::TRANS_TYPE_EXPENSE) {
-            Notification::send([Auth::user()], new MoneyTransferRequestedNotification($obj));
+            Notification::send([Auth::user(), Admin::find(1)], new MoneyTransferRequestedNotification($obj));
         } else {
-            Notification::send([Auth::user()], new CardRechargeRequestedNotification($obj));
+            Notification::send([Auth::user(), Admin::find(1)], new CardRechargeRequestedNotification($obj));
         }
     }
 

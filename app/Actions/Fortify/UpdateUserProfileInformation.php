@@ -39,7 +39,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'phone' => ['required', 'string', 'max:255'],
         ])->validateWithBag('updateProfileInformation');
 
-        $this->uploadImage($input);
+        $input['id_document'] = $this->uploadImage($user, $input);
 
         if (
             $input['email'] !== $user->email &&
@@ -53,7 +53,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'email' => $input['email'],
                 'first_name' => $input['firstName'],
                 'gender' => $input['gender'],
-                'ID_document' => $input['IDDocument'],
+                'ID_document' => $input['id_document'],
                 'last_name' => $input['lastName'],
                 'occupation' => $input['occupation'],
                 'phone' => $input['phone']
@@ -75,7 +75,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'email_verified_at' => null,
             'first_name' => $input['firstName'],
             'gender' => $input['gender'],
-            'ID_document' => $input['IDDocument'],
+            'ID_document' => $input['id_document'],
             'last_name' => $input['lastName'],
             'occupation' => $input['occupation'],
             'phone' => $input['phone']
@@ -84,9 +84,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         $user->sendEmailVerificationNotification();
     }
 
-    protected function uploadImage(array $input): string {
+    protected function uploadImage(User $user, array $input): string {
         if ($input['file']) {
-            $resp = Storage::put('storage/id-pics', $input['file'], 'public');
+            $resp = Storage::putFileAs('storage/id-pics', $input['file'], str_replace(' ', '', "$user->id-$user->full_name.jpg"));
+            // $resp = Storage::put('storage/id-pics', $input['file'], 'public');
             return $resp;
         } else {
             return $input['IDDocument'];
