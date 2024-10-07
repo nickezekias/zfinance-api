@@ -70,6 +70,7 @@ class MoneyTransferRequestedNotification extends Notification
             'beneficiary' => $this->transaction->beneficiary,
             'date' => $this->transaction->date,
             'description' => $this->transaction->description,
+            'title' => $this->transaction->title,
             'type' => $this->transaction->type
         ];
     }

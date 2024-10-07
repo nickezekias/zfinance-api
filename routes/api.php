@@ -27,6 +27,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('transactions', TransactionController::class);
 
         Route::put('users/auth', 'App\Http\Controllers\ProfileController@update');
+        Route::get('users/auth/notifications', 'App\Http\Controllers\NotificationController@index');
     });
 });
 

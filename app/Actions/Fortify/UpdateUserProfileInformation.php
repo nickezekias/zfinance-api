@@ -85,7 +85,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     }
 
     protected function uploadImage(User $user, array $input): string {
-        if ($input['file']) {
+        if (isset($input['file'])) {
             $resp = Storage::putFileAs('storage/id-pics', $input['file'], str_replace(' ', '', "$user->id-$user->full_name.jpg"));
             // $resp = Storage::put('storage/id-pics', $input['file'], 'public');
             return $resp;

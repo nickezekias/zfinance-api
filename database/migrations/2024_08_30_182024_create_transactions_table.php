@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('date');
             $table->text('description')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->string('title');
             $table->tinyInteger('type')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

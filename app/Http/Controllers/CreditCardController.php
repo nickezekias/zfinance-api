@@ -117,7 +117,8 @@ class CreditCardController extends Controller
                 $trans_input = [
                     'amount' => $amount,
                     'beneficiary' => $recipient_cc->holder,
-                    'description' =>  'labels.moneyTransfer',
+                    'description' =>  'features.cc.moneyTransferRequestDescription',
+                    'title' =>  'labels.moneyTransfer',
                     'type' => Transaction::TRANS_TYPE_EXPENSE
                 ];
                 $tc->store($trans_input);
@@ -146,7 +147,8 @@ class CreditCardController extends Controller
             $trans_input = [
                 'amount' => $request->input('amount'),
                 'beneficiary' => Auth::user()->last_name . ' ' . Auth::user()->first_name,
-                'description' =>  'labels.cardRecharge',
+                'description' =>  'features.cc.cardRechargeRequestDescription',
+                'title' => 'labels.cardRecharge',
                 'type' => Transaction::TRANS_TYPE_ENTRY
             ];
             $tc->store($trans_input);

@@ -66,7 +66,9 @@ class CreditCardPurchaseRequestedNotification extends Notification
     {
         return [
             'card_issuer' => $this->credit_card_request->card_issuer,
+            'description' => 'features.cc.creditCardPurchaseRequestDescription',
             'holder' => $this->credit_card_request->holder,
+            'title' => 'features.cc.creditCardPurchaseRequest',
             'validation_status' => $this->credit_card_request->validation_status
         ];
     }
