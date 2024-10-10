@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\NotificationResource as ObjResource;
 use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
@@ -11,7 +12,7 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        return Auth::user()->notifications;
+        return ObjResource::collection(Auth::user()->notifications);
     }
 
     /**
