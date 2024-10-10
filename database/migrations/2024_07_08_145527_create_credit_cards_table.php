@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('credit_cards', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 12, 3);
+            $table->decimal('amount', 12, 3)->default(0);
             $table->string('account_number');
             $table->string('cvc');
             $table->date('expiry_date');
