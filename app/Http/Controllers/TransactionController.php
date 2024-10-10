@@ -34,6 +34,7 @@ class TransactionController extends Controller
         $obj->beneficiary = $input['beneficiary'];
         $obj->date = now();
         $obj->description = $input['description'];
+        $obj->title = $input['title'];
         $obj->type = $input['type'];
         $obj->user_id = Auth::user()->id;
         $obj->save();
