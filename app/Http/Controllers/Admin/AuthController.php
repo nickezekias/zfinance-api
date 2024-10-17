@@ -120,7 +120,7 @@ class AuthController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
 

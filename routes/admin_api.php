@@ -13,7 +13,7 @@ Route::prefix('v1')->group(function () {
             Route::post('reset-password', 'App\Http\Controllers\Admin\AuthController@resetPassword')->name('password.reset');
 
             Route::middleware('auth:admin')->group(function() {
-                Route::get('logout', 'App\Http\Controllers\Admin\AuthController@logout')->name('logout');
+                Route::post('logout', 'App\Http\Controllers\Admin\AuthController@logout')->name('logout');
 
                 Route::get('/users/auth', function (Request $request) {
                     return new AdminResource(Auth::guard('admin')->user());
