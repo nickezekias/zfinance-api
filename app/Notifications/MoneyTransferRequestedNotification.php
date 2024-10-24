@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\Admin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -41,7 +40,7 @@ class MoneyTransferRequestedNotification extends Notification
     {
         $url = env('APP_URL') . '/#money-transfer';
 
-        if ($notifiable instanceof Admin) {
+        if ($notifiable->is_admin()) {
             return (new MailMessage)
             ->greeting('Hello!')
             ->line('A user has requested a money transfer operation!')

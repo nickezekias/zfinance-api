@@ -75,4 +75,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->birth_date->age;
     }
+
+    public function is_admin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }
