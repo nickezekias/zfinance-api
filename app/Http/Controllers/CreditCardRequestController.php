@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Admin\GetAdmin;
 use App\Http\Resources\CreditCardRequestResource as ObjResource;
 use App\Models\CreditCardRequest as Obj;
 use App\Notifications\CreditCardPurchaseRequestedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
 
 class CreditCardRequestController extends Controller
@@ -16,6 +18,17 @@ class CreditCardRequestController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+    {
+        Gate::authorize('viewAny', Obj::class);
+
+        $all = DB::table('credit_card_requests')->get();
+        return ObjResource::collection($all);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index_for_auth_user()
     {
         $all = DB::table('credit_card_requests')->where('user_id', Auth::user()->id)->get();
         return ObjResource::collection($all);
@@ -33,7 +46,9 @@ class CreditCardRequestController extends Controller
         $obj->card_issuer = $request->input('cardIssuer');
         $obj->save();
 
-        Notification::send([Auth::user()], new CreditCardPurchaseRequestedNotification($obj));
+        $admin = (new GetAdmin())->execute();
+
+        Notification::send([Auth::user(), $admin], new CreditCardPurchaseRequestedNotification($obj));
 
         return new ObjResource($obj);
     }

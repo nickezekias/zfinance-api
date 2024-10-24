@@ -19,7 +19,7 @@ class CreditCardRequestResource extends JsonResource
             'cardNetwork' => $this->card_network,
             'cardIssuer' => $this->card_issuer,
             'cardType' => $this->card_type,
-            'userId' => $this->user_id,
+            'user' => $this->user_id,
             'validatedBy' => $this->validated_by,
             'validationMessages' => $this->validation_messages,
             'validationStatus' => $this->validation_status,

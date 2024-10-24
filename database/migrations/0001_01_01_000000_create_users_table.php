@@ -27,6 +27,7 @@ return new class extends Migration
             $table->timestamp('ID_document_verified_at')->nullable();
             $table->string('password');
             $table->boolean('is_active')->default(true);
+            $table->string('role', 50)->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

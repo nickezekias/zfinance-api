@@ -27,9 +27,11 @@ class UserResource extends JsonResource
             'IDDocument' => $this->ID_document,
             'IDDocumentVerifiedAt' => $this->ID_document_verified_at,
             'isActive' => $this->is_active,
+            'isAdmin' => $this->is_admin(),
             'gender' => $this->gender,
             'phone' => $this->phone,
             'occupation' => $this->occupation,
+            'role' => $this->role,
             'phoneVerifiedAt' => $this->phone_verified_at,
             'updateAt' => $this->updated_at
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Admin\GetAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -38,10 +39,12 @@ class TransactionController extends Controller
         $obj->user_id = Auth::user()->id;
         $obj->save();
 
+        $admin = (new GetAdmin())->execute();
+
         if ($obj->type == Transaction::TRANS_TYPE_EXPENSE) {
-            Notification::send([Auth::user()], new MoneyTransferRequestedNotification($obj));
+            Notification::send([Auth::user(), $admin], new MoneyTransferRequestedNotification($obj));
         } else {
-            Notification::send([Auth::user()], new CardRechargeRequestedNotification($obj));
+            Notification::send([Auth::user(), $admin], new CardRechargeRequestedNotification($obj));
         }
     }
 
